@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "advent"
+version = "0.1.0"
+description = ""
+authors = ["Marcus <marcus@lastcraft.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+pylint = "^2.15.7"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
