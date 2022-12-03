@@ -6,7 +6,7 @@ def intersection(first, second):
     for letter in first:
         if letter in second:
             both += letter
-    return both[0]
+    return both
 
 def score(letter):
     if ord(letter) >= ord('a') and ord(letter) <= ord('z'):
@@ -19,10 +19,24 @@ def part1(data):
     for backpack in data.split("\n"):
         if len(backpack) > 0:
             first, second = halves(backpack)
-            total += score(intersection(first, second))
+            total += score(intersection(first, second)[0])
     print(total)
 
-part1("""
+def threes(items):
+    triples = []
+    i = iter(items)
+    for _ in range(0, int(len(items)/3)):
+        triples.append((next(i), next(i), next(i)))
+    return triples
+
+def part2(data):
+    total = 0
+    for (first, second, third) in threes([item for item in data.split("\n") if item]):
+        badge = intersection(intersection(first, second), third)[0]
+        total += score(badge)
+    print(total)
+
+part2("""
 mmbclcsDHCflDDlCrzzrDWjPJvjPvqJPjfpqZQdfWd
 NNFLnFRNhgNQtMLSFSgwSwGJPZWLPvjpjjJGZJPvWPvJ
 BnwFNgVVhwNwVQrmzbrrCHVTmDsm
