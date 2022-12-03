@@ -7,9 +7,19 @@ result_points = {
     'Paper': {'Rock': 6, 'Paper': 3, 'Scissors': 0},
     'Scissors': {'Rock': 0, 'Paper': 6, 'Scissors': 3}}
 
+desired_move = {
+    'X': {'Rock': 'Scissors', 'Paper': 'Rock', 'Scissors': 'Paper'},
+    'Y': {'Rock': 'Rock', 'Paper': 'Paper', 'Scissors': 'Scissors'},
+    'Z': {'Rock': 'Paper', 'Paper': 'Scissors', 'Scissors': 'Rock'}}
+
 def game_score(them_code, me_code):
     me = me_map[me_code]
     them = them_map[them_code]
+    return item_points[me] + result_points[me][them]
+
+def game_score2(them_code, desired_result):
+    them = them_map[them_code]
+    me = desired_move[desired_result][them]
     return item_points[me] + result_points[me][them]
 
 def score(scorer, data):
@@ -20,7 +30,7 @@ def score(scorer, data):
             total += scorer(codes[0], codes[1])
     print(total)
 
-score(game_score, """
+score(game_score2, """
 B X
 C Y
 A X
