@@ -13,7 +13,7 @@ def overlaps(r1, r2):
         or r2[0] <= r1[1] <= r2[1])
 
 
-def part1(data):
+def part2(data):
     total = 0
     for assignment in data.split("\n"):
         if assignment:
@@ -22,7 +22,7 @@ def part1(data):
                 total += 1
     print(total)
 
-part1("""
+part2("""
 60-60,45-60
 36-57,7-36
 2-32,1-55
