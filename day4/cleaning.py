@@ -6,12 +6,19 @@ def numbers(text):
 def covers(big, small):
     return big[0] <= small[0] and big[1] >= small[1]
 
+def overlaps(r1, r2):
+    return (r1[0] <= r2[0] <= r1[1]
+        or r1[0] <= r2[1] <= r1[1]
+        or r2[0] <= r1[0] <= r2[1]
+        or r2[0] <= r1[1] <= r2[1])
+
+
 def part1(data):
     total = 0
     for assignment in data.split("\n"):
         if assignment:
             ranges = numbers(assignment)
-            if covers(ranges[0:2], ranges[2:4]) or covers(ranges[2:4], ranges[0:2]):
+            if overlaps(ranges[0:2], ranges[2:4]):
                 total += 1
     print(total)
 
