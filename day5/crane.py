@@ -49,11 +49,11 @@ def parse(data):
     parts = data.split("\n\n")
     return (parse_stacks(parts[0]), parse_moves(parts[1]))
 
-def last(l):
-    return l[-1]
+def last(l, n=1):
+    return l[(-n):]
 
-def except_last(l):
-    return l[0:-1]
+def except_last(l, n=1):
+    return l[0:(-n)]
 
 def apply_move(pallet, move):
     for _ in range(0, move["times"]):
@@ -70,7 +70,21 @@ def part1(data):
         top += last(stack)
     print(top)
 
-part1("""
+def apply_move2(pallet, move):
+    crates = last(pallet[move["from"]], move["times"])
+    pallet[move["from"]] = except_last(pallet[move["from"]], move["times"])
+    pallet[move["to"]] += crates
+
+def part2(data):
+    pallet, moves = parse(data)
+    for move in moves:
+        apply_move2(pallet, move)
+    top = ""
+    for stack in pallet:
+        top += last(stack)
+    print(top)
+
+part2("""
             [Q]     [G]     [M]    
             [B] [S] [V]     [P] [R]
     [T]     [C] [F] [L]     [V] [N]
