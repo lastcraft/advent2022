@@ -58,11 +58,21 @@ def part1(data):
         size = element.get_size()
         if size < 100000:
             total[0] += size
-        print(name, element.get_size())
     tree.walk("/", count)
     print(total[0])
 
-part1("""
+def part2(data):
+    tree = parse(data)
+    target = tree.get_size() - 40000000
+    best = [tree]
+    def find(name, element):
+        size = element.get_size()
+        if size < best[0].get_size() and size > target:
+            best[0] = element
+    tree.walk("/", find)
+    print(best[0].get_size())
+
+part2("""
 $ cd /
 $ ls
 dir bfqzjjct
