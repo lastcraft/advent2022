@@ -16,7 +16,7 @@ class Dir:
 
     def walk(self, fn):
         fn(self)
-        for key, element in self.children.items():
+        for element in self.children.values():
             element.walk(fn)
 
 class File:
