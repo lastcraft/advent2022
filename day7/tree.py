@@ -14,10 +14,10 @@ class Dir:
             size += element.get_size()
         return size
 
-    def walk(self, name, fn):
-        fn(name, self)
+    def walk(self, fn):
+        fn(self)
         for key, element in self.children.items():
-            element.walk(key, fn)
+            element.walk(fn)
 
 class File:
     def __init__(self, size):
@@ -26,7 +26,7 @@ class File:
     def get_size(self):
         return self.size
 
-    def walk(self, _, fn):
+    def walk(self, fn):
         pass
 
 def cd(path, dir):
@@ -54,22 +54,22 @@ def parse(history):
 def part1(data):
     tree = parse(data)
     total = [0]
-    def count(name, element):
+    def count(element):
         size = element.get_size()
         if size < 100000:
             total[0] += size
-    tree.walk("/", count)
+    tree.walk(count)
     print(total[0])
 
 def part2(data):
     tree = parse(data)
     target = tree.get_size() - 40000000
     best = [tree]
-    def find(name, element):
+    def find(element):
         size = element.get_size()
         if size < best[0].get_size() and size > target:
             best[0] = element
-    tree.walk("/", find)
+    tree.walk(find)
     print(best[0].get_size())
 
 part2("""
