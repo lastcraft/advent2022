@@ -81,11 +81,10 @@ def look_south(grid, scores):
 def part2(data):
     grid = [ints(row) for row in data.split("\n") if row]
     scores = all_ones(grid)
-    scores = look_east(grid, d(scores))
-    scores = look_west(grid, d(scores))
-    scores = look_north(grid, d(scores))
-    scores = look_south(grid, d(scores))
-    d(scores)
+    scores = look_east(grid, scores)
+    scores = look_west(grid, scores)
+    scores = look_north(grid, scores)
+    scores = look_south(grid, scores)
     print(max(list(map(max, scores))))
 
 part2("""
