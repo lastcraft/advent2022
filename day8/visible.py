@@ -43,19 +43,52 @@ def from_bottom(grid, visibility):
 
 def d(x):
     print('>>', x)
-    print()
     return x
 
 def part1(data):
     grid = [ints(row) for row in data.split("\n") if row]
     visibility = nothing_visible(grid)
-    visibility = from_left(grid, d(visibility))
-    visibility = from_right(grid, d(visibility))
-    visibility = from_top(grid, d(visibility))
-    visibility = from_bottom(grid, d(visibility))
+    visibility = from_left(grid, visibility)
+    visibility = from_right(grid, visibility)
+    visibility = from_top(grid, visibility)
+    visibility = from_bottom(grid, visibility)
     print(sum(list(map(sum, visibility))))
 
-part1("""
+def all_ones(grid):
+    return list(map(
+        lambda row: list(map(lambda visible: 1, row)),
+        grid))
+
+def look_east(grid, scores):
+    scores = clone(scores)
+    for y, row in enumerate(grid):
+        for x, h in enumerate(row):
+            for distance in range(1, width(grid) - x):
+                if h <= grid[y][x + distance]:
+                    break
+            scores[y][x] = scores[y][x] * distance
+    return scores
+
+def look_west(grid, scores):
+    return flip_h(look_east(flip_h(grid), flip_h(scores)))
+
+def look_north(grid, scores):
+    return flip_d(look_east(flip_d(grid), flip_d(scores)))
+
+def look_south(grid, scores):
+    return flip_v(look_north(flip_v(grid), flip_v(scores)))
+
+def part2(data):
+    grid = [ints(row) for row in data.split("\n") if row]
+    scores = all_ones(grid)
+    scores = look_east(grid, d(scores))
+    scores = look_west(grid, d(scores))
+    scores = look_north(grid, d(scores))
+    scores = look_south(grid, d(scores))
+    d(scores)
+    print(max(list(map(max, scores))))
+
+part2("""
 003112220410413101104044022234320204233341435252223642044225451531421012104343030211442433410302111
 301233004003313130222434121135033231250505241131342032404032560542233000343455552123100410402211201
 111301041221333142533352050250154136146324550411565615444115604102531135302000320033233340431313123
