@@ -20,6 +20,7 @@ class Signal:
             self.values.append(self.values[i - 1])
 
     def at(self, cycle):
+        self.lengthen(cycle + 1)
         return self.values[cycle]
 
 def part1(data):
@@ -31,14 +32,31 @@ def part1(data):
             command, value = tokens[0], int(tokens[1]) if len(tokens) > 1 else None
             x.apply(clock, to_signal(command, value))
             clock += durations[command]
-            print(command, value)
     samples = [20, 60, 100, 140, 180, 220]
     total = 0
     for sample in samples:
         total += x.at(sample) * sample
     print(total)
 
-part1("""
+def part2(data):
+    x = Signal()
+    clock = 1
+    for line in data.split("\n"):
+        if line:
+            tokens = line.split(" ")
+            command, value = tokens[0], int(tokens[1]) if len(tokens) > 1 else None
+            x.apply(clock, to_signal(command, value))
+            clock += durations[command]
+    for row in range(0, 6):
+        for column in range(0, 40):
+            cycle = 40 * row + column + 1
+            if abs(x.at(cycle) - column) < 2:
+                print("#", end="")
+            else:
+                print(".", end="")
+        print()
+
+part2("""
 noop
 noop
 addx 5
