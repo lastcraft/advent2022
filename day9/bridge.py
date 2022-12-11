@@ -23,12 +23,10 @@ def footstep(here, there):
     else:
         return 1
 
-class Tail:
+class Pullable:
     def __init__(self):
         self.x = 0
         self.y = 0
-        self.trail = set()
-        self.mark()
 
     def pull(self, x, y):
         if x == self.x and two_or_more(self.y, y):
@@ -38,6 +36,24 @@ class Tail:
         elif two_or_more(self.x, x) or two_or_more(self.y, y):
             self.x += footstep(self.x, x)
             self.y += footstep(self.y, y)
+
+class Segment(Pullable):
+    def __init__(self, tail):
+        super().__init__()
+        self.tail = tail
+
+    def pull(self, x, y):
+        super().pull(x, y)
+        self.tail.pull(self.x, self.y)
+
+class Tail(Pullable):
+    def __init__(self):
+        super().__init__()
+        self.trail = set()
+        self.mark()
+
+    def pull(self, x, y):
+        super().pull(x, y)
         self.mark()
 
     def mark(self):
@@ -51,7 +67,19 @@ def part1(data):
             head.move(directions[direction], int(distance))
     print(len(head.tail.trail))
 
-part1("""
+def part2(data):
+    tail = Tail()
+    head = Head(
+        Segment(Segment(Segment(Segment(
+            Segment(Segment(Segment(Segment(
+                tail)))))))))
+    for line in data.split("\n"):
+        if line:
+            (direction, distance) = line.split(" ")
+            head.move(directions[direction], int(distance))
+    print(len(tail.trail))
+
+part2("""
 L 2
 D 2
 U 1
