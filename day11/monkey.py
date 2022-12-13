@@ -1,11 +1,12 @@
 import re
 
 class Monkey:
-    def __init__(self, items, operation, test):
+    def __init__(self, items, operation, test, modulus = None):
         self.items = items
         self.operation = operation
         self.test = test
         self.inspections = 0
+        self.modulus = modulus
 
     def __repr__(self):
         return f"Monkey {repr(self.items)} {self.inspections}"
@@ -18,18 +19,20 @@ class Monkey:
             self.inspect(self.items.pop(0), monkeys)
 
     def inspect(self, item, monkeys):
-        worry = self.operation(item) // 3
+        worry = self.operation(item)
+        if self.modulus:
+            worry %= self.modulus
         monkeys[self.test(worry)].catch(worry)
         self.inspections += 1
 
-def parse(monkey_code):
+def parse_monkey(monkey_code, modulus = None):
     items = parse_numbers(extract(r"Starting items: (.*?)\n", monkey_code))
     operation = parse_operation(extract(r"Operation: new = (.*?)\n", monkey_code))
     test = make_test(
         int(extract(r"Test: divisible by (.*?)\n", monkey_code)),
         int(extract(r"If true: throw to monkey (.*?)\n", monkey_code)),
         int(extract(r"If false: throw to monkey (.*?)$", monkey_code)))
-    return Monkey(items, operation, test)
+    return Monkey(items, operation, test, modulus)
 
 def parse_numbers(token):
     return list(map(int, token.split(", ")))
@@ -51,16 +54,33 @@ def extract(regex, line):
 
 def monkey_business(monkeys):
     most_active = sorted(monkeys, key=lambda monkey: monkey.inspections, reverse=True)
+    for monkey in most_active:
+        print(monkey.inspections)
     return most_active[0].inspections * most_active[1].inspections
 
 def part1(data):
-    monkeys = [parse(monkey_code.strip()) for monkey_code in data.split("\n\n")]
-    for round in range(0, 20):
+    monkeys = [parse_monkey(monkey_code.strip()) for monkey_code in data.split("\n\n")]
+    for _ in range(0, 20):
+        for monkey in monkeys:
+            monkey.inspect_all(monkeys)
+    print(monkeys)
+    print(monkey_business(monkeys))
+
+def parse_divisor_multiple(data):
+    modulus = 1
+    for monkey_code in data.split("\n\n"):
+        modulus *= int(extract(r"Test: divisible by (.*?)\n", monkey_code))
+    return modulus
+
+def part2(data):
+    modulus = parse_divisor_multiple(data)
+    monkeys = [parse_monkey(monkey_code.strip(), modulus) for monkey_code in data.split("\n\n")]
+    for _ in range(0, 10000):
         for monkey in monkeys:
             monkey.inspect_all(monkeys)
     print(monkey_business(monkeys))
 
-part1("""
+part2("""
 Monkey 0:
   Starting items: 65, 78
   Operation: new = old * 3
