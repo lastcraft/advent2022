@@ -70,6 +70,21 @@ def part1(data):
         pass
     print(peek(distances, start))
 
+def part2(data):
+    chart = parse_heights(data)
+    end = find(data, width(chart), 'E')
+    start = find(data, width(chart), 'S')
+    distances = make_grid(chart, 9999)
+    mark(distances, end, 0)
+    while measurement_sweep(chart, distances):
+        pass
+    shortest = 9999
+    for y in range(0, height(chart)):
+        for x in range(0, width(chart)):
+            if peek(chart, (x, y)) == 0:
+                shortest = min(shortest, peek(distances, (x, y)))
+    print(shortest)
+
 def show(chart, distances):
     for y in range(0, height(chart)):
         for x in range(0, width(chart)):
@@ -80,7 +95,7 @@ def show(chart, distances):
                 print(' ', end='')
         print()
 
-part1("""
+part2("""
 abcccccccccccaaaaacccccccaaaaaaccccccccccccccccccccccccccccccccaaaaaaaaaaaaaacccccccccccccccccccaaaaaacccccccacccccccccaaccaaccccccccccccccccccccccccccccccaaaaaa
 abcccccccccccaaaaaaacccccaaaaaaccccccccaaccccccccccaaaaccccccccaaaaaaaaaaaaaccccccccccccccccccccaaaaaaccccaaaacccccccccaaaaaaccccccccccccccccccccccccccccccccaaaa
 abccccccccccaaaaaaaacccccaaaaaccccccccaaaacccccccccaaaacccccccccccaaaaaaacccccccccccccccccccccccaaaaacccccaaaaaaccccccccaaaaacccccccccccaaaccccccccccccccccccaaaa
