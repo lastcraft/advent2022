@@ -1,3 +1,5 @@
+import functools
+
 def parse_pairs(data):
     return [list(map(eval, pair.split("\n"))) for pair in data.strip().split("\n\n")]
 
@@ -29,7 +31,21 @@ def part1(data):
             score += i + 1
     print(score)
 
-part1("""
+def parse_packets(data):
+    return [eval(line) for line in data.strip().split("\n") if line]
+
+def part2(data):
+    packets = parse_packets(data)
+    packets.append([[2]])
+    packets.append([[6]])
+    packets.sort(key=functools.cmp_to_key(compare))
+    for i, packet in enumerate(packets):
+        if compare(packet, [[2]]) == 0:
+            print(i + 1)
+        if compare(packet, [[6]]) == 0:
+            print(i + 1)
+
+part2("""
 [[[[3,10,1,1],[0],[4]],10,[[1,4,1],7,10],[[2,3],[4,10,6,6]],9],[[6,[3,1,4,0,0]],5,8,0],[10,10,7,[[],[0,8],[7,6,4]],[[0,7,2,1,2],7,2,[6,0],[7,6,4,6]]]]
 [[],[],[9,[8,[],1]],[1,5],[[],[]]]
 
