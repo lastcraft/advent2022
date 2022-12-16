@@ -67,6 +67,8 @@ def one(n):
     return min(1, max(-1, n))
 
 def drop_sand(cave, point):
+    if cave.peek(point) == "o":
+        raise ValueError()
     cave.peek(point.add(Point(0, 1)))
     if cave.peek(point.add(Point(0, 1))) == ".":
         drop_sand(cave, point.add(Point(0, 1)))
@@ -94,7 +96,29 @@ def part1(data):
     print(n)
     # cave.paint()
 
-part1("""
+def part2(data):
+    walls = parse(data)
+    bbox = bounding_box(walls)
+    floor = bbox.y1 + 2
+    bbox.y1 = floor
+    bbox.x0 = min(bbox.x0, 500 - floor)
+    bbox.x1 = max(bbox.x1, 500 + floor)
+    cave = Cave(bbox)
+    for i in range(-floor, floor):
+        cave.plot(Point(500 + i, floor - 1), "#")
+    for wall in walls:
+        paint(cave, wall)
+    n = 0
+    while(True):
+        try:
+            drop_sand(cave, Point(500, 0))
+            n += 1
+        except ValueError:
+            break
+    print(n)
+    # cave.paint()
+
+part2("""
 498,13 -> 498,16 -> 496,16 -> 496,20 -> 509,20 -> 509,16 -> 502,16 -> 502,13
 478,162 -> 478,154 -> 478,162 -> 480,162 -> 480,159 -> 480,162 -> 482,162 -> 482,156 -> 482,162 -> 484,162 -> 484,161 -> 484,162 -> 486,162 -> 486,155 -> 486,162 -> 488,162 -> 488,159 -> 488,162 -> 490,162 -> 490,158 -> 490,162 -> 492,162 -> 492,159 -> 492,162 -> 494,162 -> 494,158 -> 494,162 -> 496,162 -> 496,153 -> 496,162
 481,79 -> 485,79
