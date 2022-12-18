@@ -43,6 +43,7 @@ def combine(covers):
         if intersects(combined[i], cover):
             combined[i] = (min(combined[i][0], cover[0]), max(combined[i][1], cover[1]))
         else:
+            combined.append(cover)
             i += 1
     return combined
 
@@ -65,7 +66,16 @@ def part1(data):
     covers = combine(covers)
     print(measure(covers) - beacons_at_y(beacons, 2000000))
 
-part1("""
+def part2(data):
+    diamonds, beacons = parse(data)
+    for y in range(0, 4000000):
+        covers = [cover for cover in [diamond.cover(y) for diamond in diamonds] if cover]
+        covers.sort()
+        covers = combine(covers)
+        if len(covers) == 2:
+            print(covers[0][1] + 1, y, (covers[0][1] + 1) * 4000000 + y)
+
+part2("""
 Sensor at x=2662540, y=1992627: closest beacon is at x=1562171, y=2000000
 Sensor at x=3577947, y=3994226: closest beacon is at x=3468220, y=3832344
 Sensor at x=34015, y=3658022: closest beacon is at x=-48386, y=3887238
