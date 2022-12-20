@@ -70,7 +70,39 @@ def part1(data):
     tree.walk(solve)
     print(best)
 
-part1("""
+def best_score(tree):
+    best = {"score": 0, "path": []}
+    def solve(path, score):
+        if score > best["score"]:
+            best["path"] = path
+            best["score"] = score
+    tree.walk(solve)
+    return best
+
+def all_partitions(items):
+    if not items:
+        return [([], [])]
+    items = list(items)[:]
+    item = items.pop()
+    all = []
+    for partition in all_partitions(items):
+        all.append(([item] + partition[0], partition[1]))
+        all.append((partition[0], [item] + partition[1]))
+    return all
+
+def part2(data):
+    valves = parse(data)
+    useful = set([tag for tag in valves if valves[tag]["flow"] > 0])
+    distances = calculate_distances(valves)
+    best = 0
+    for partition in all_partitions(list(useful)):
+        me = Tree("AA", set(partition[0]), valves, distances, 26, 0)
+        elephant = Tree("AA", set(partition[1]), valves, distances, 26, 0)
+        score = best_score(me)["score"] + best_score(elephant)["score"]
+        best = max(best, score)
+    print(best)
+
+part2("""
 Valve QE has flow rate=3; tunnels lead to valves OU, ME, UX, AX, TW
 Valve TN has flow rate=16; tunnels lead to valves UW, CG, WB
 Valve UX has flow rate=0; tunnels lead to valves AA, QE
